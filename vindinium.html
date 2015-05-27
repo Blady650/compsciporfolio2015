@@ -1,0 +1,189 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="vindinium.css"/>
+    <title>Vindinium</title>
+    <style>
+#nav {
+      width: 100%;
+      float: left;
+      margin: 0 0 3em 0;
+      padding: 0;
+      list-style: none;
+      background-color: #f2f2f2;
+      border-bottom: 1px solid #ccc;
+      border-top: 1px solid #ccc;
+}
+#nav li {
+      float: left;
+}
+#nav li a {
+      display: block;
+      padding: 8px 15px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #069;
+      border-right: 1px solid #ccc;
+}
+#nav li a:hover {
+      color: #c00;
+      background-color: #fff;
+}
+body {
+      background-color: #465;
+      font: Arial;
+}
+#wrap {
+      width: 750px;
+      margin: 0 auto;
+      background-color: #fff;
+}
+h1 {
+      font-size: 1.5em;
+      padding: 1em 8px;
+      color: #333;
+      background-color: #569;
+      margin: 0;
+}
+#content {
+      padding: 0 50px 50px;
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+   <h1>Vindinium</h1>
+   <ul id="nav">
+      <li><a href="html.html">HTML</a></li>
+      <li><a href="aboutme.html">About Me</a></li>
+      <li><a href="hardware.html">Hardware</a></li>
+      <li><a href="welcome.html">Home</a></li>
+      <li><a href="calculator.html">Calculator</a></li>
+      <li><a href="simonsays.html">Simon Says Game</a></li>
+   </ul>
+   <div id="content">
+</head>
+<body>
+      <h2>Vindinium, an AI game</h2>
+    <img src ="http://stratosprovatopoulos.com/wp-content/uploads/2014/02/Vindinium.jpg"/>
+    <p>Vindinium is an online based game where the player gets to customize his or her AI using javascript. Adding more commands to the AI will increase the likelyhood of winning a game. The goal of the game is to get as much gold as possible within 1,200 turns. To get gold, the AI must attack gold mines, but there are other AI's that can steal your mines. There is a health bar which can be replenished by a tavern and the AI can lose health if it was attacked by another AI or a goblin protecting the mine. If your AI loses all it's health, it will respawn in its own spawn point but it will lose all of its mines.</p>
+    <br/>
+    <br/>
+    <h2>My Personal Code:</h2>
+    <br/>
+    <code><pre>
+    var Bot = require('bot');
+var PF = require('pathfinding');
+var bot = new Bot('q8o61dp4', 'arena', 'http://52.8.116.125:9000'); //Put your bot's code here and change training to Arena when you want to fight others.
+//var bot = new Bot('id6a4m0i', 'arena', 'http://vindinium.org'); //Put your bot's code here and change training to Arena when you want to fight others.
+var goDir;
+var Promise = require('bluebird');
+Bot.prototype.botBrain = function() {
+    return new Promise(function(resolve, reject) {
+        _this = bot;
+        //////* Write your bot below Here *//////
+        //////* Set `myDir` in the direction you want to go and then bot.goDir is set to myDir at the bottom *////////
+        
+        /*                                      * 
+         * This Code is global data!            *
+         *                                      */
+        
+        // Set myDir to what you want and it will set bot.goDir to that direction at the end.  Unless it is "none"
+        var myDir;
+        var myPos = [bot.yourBot.pos.x, bot.yourBot.pos.y];
+
+        // Gives the enemy bots a variable for use in other variables for example using this variable to target an enemy bot or run away from an enemy bot
+        var enemyBots = [];
+        if(bot.yourBot.id != 1) enemyBots.push(bot.bot1);
+        if(bot.yourBot.id != 2) enemyBots.push(bot.bot2);
+        if(bot.yourBot.id != 3) enemyBots.push(bot.bot3);
+        if(bot.yourBot.id != 4) enemyBots.push(bot.bot4);
+        // Gives mines that aren't mine whether it be enemy mines or free mines, a variable to use if i want to make a task to get all the mines
+        var notMyMines = [];
+        notMyMines = notMyMines.concat(bot.freeMines);
+        if(bot.yourBot.id != 1) notMyMines = notMyMines.concat(bot.bot1mines);
+        if(bot.yourBot.id != 2) notMyMines = notMyMines.concat(bot.bot2mines);
+        if(bot.yourBot.id != 3) notMyMines = notMyMines.concat(bot.bot3mines);
+        if(bot.yourBot.id != 4) notMyMines = notMyMines.concat(bot.bot4mines);
+        
+        /*                                      * 
+         * This Code Decides WHAT to do         *
+         *                                      */
+        var task;
+        if(bot.yourBot.life < 35){
+            task = "tavern";
+        }
+        else{ 
+            task = "freeMines";   
+        }
+        console.log("Doing It" + task);
+        /*                                      * 
+         * This Code Determines HOW to do it    *
+         *                                      */
+        
+        
+        // This Code find the nearest tavern and sets myDir toward that direction // 
+        if(task === "tavern") {
+            var closestTavern = bot.taverns[0];
+            for(i = 0; i < bot.taverns.length; i++) {
+                if(bot.findDistance(myPos, closestTavern) > bot.findDistance(myPos, bot.taverns[i])) {
+                    closestTavern = bot.taverns[i];
+                }
+            }
+            console.log("Going to get health!");
+            myDir = bot.findPath(myPos, closestTavern);
+        }
+        
+        // This code finds the nearest enemy mine and sets myDir toward that direction //
+        if(task === "freeMines") {
+            var closestMine = notMyMines[0];
+            for(i = 0; i < notMyMines.length; i++) {
+                if(bot.findDistance(myPos, closestMine) > bot.findDistance(myPos, notMyMines[i])) {
+                    closestMine = notMyMines[i];
+                }
+            }
+            console.log("Spotted closest mine" + myDir + closestMine);
+            console.log("Going to get gold!");
+            myDir = bot.findPath(myPos, closestMine);
+        }
+        
+        //This code finds the nearest enemyBot that has the lowest health and attacks it        
+        if(task === "attacklowestheath"){
+            var lowestHeathIndex = 0;
+            for (i = 0; i < enemyBots.length; i++){
+                if (enemyBots[lowestHeathIndex].life > enemyBots[i].life){
+                    lowestHeathIndex = i;
+                }
+            }
+            myDir = bot.findPath(myPos, [enemyBots[lowestHeathIndex].pos.x, enemyBots[lowestHeathIndex].pos.y])
+          }
+        // This code finds the nearest free mine //
+        
+        /*                                                                                                                              * 
+         * This Code Sets your direction based on myDir.  If you are trying to go to a place that you can't reach, you move randomly.   *
+         * Otherwise you move in the direction set by your code.  Feel free to change this code if you want.                            */
+        console.log("myDir" + myDir);
+        if(myDir === "none") {
+            console.log("Going Random!");
+            var rand = Math.floor(Math.random() * 4);
+            var dirs = ["north", "south", "east", "west"];
+            bot.goDir = dirs[rand];
+        } else {
+            bot.goDir = myDir;
+        }
+
+        
+        
+        
+        
+        
+        
+        ///////////* DON'T REMOVE ANTYTHING BELOW THIS LINE *//////////////
+        resolve();
+    });
+}
+bot.runGame();
+</pre></code>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type='text/javascript' src='calculator.js'></script>
+    <title>Calculator</title>
+<style>
+#nav {
+      width: 100%;
+      float: left;
+      margin: 0 0 3em 0;
+      padding: 0;
+      list-style: none;
+      background-color: #f2f2f2;
+      border-bottom: 1px solid #ccc;
+      border-top: 1px solid #ccc;
+}
+#nav li {
+      float: left;
+}
+#nav li a {
+      display: block;
+      padding: 8px 15px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #069;
+      border-right: 1px solid #ccc;
+}
+#nav li a:hover {
+      color: #c00;
+      background-color: #fff;
+}
+body {
+      background-color: #325;
+      font: Arial;
+}
+#wrap {
+      width: 750px;
+      margin: 0 auto;
+      background-color: #fff;
+}
+h1 {
+      font-size: 1.5em;
+      padding: 1em 8px;
+      color: #fff;
+      background-color: #569;
+      margin: 0;
+}
+#content {
+      padding: 0 50px 50px;
+}
+</style>
+</head>
+
+<body>
+<div id="wrap">
+   <h1>Drop Down Calculator</h1>
+   <ul id="nav">
+      <li><a href="html.html">HTML</a></li>
+      <li><a href="aboutme.html">About Me</a></li>
+      <li><a href="hardware.html">Hardware</a></li>
+      <li><a href="welcome.html">Home</a></li>
+      <li><a href="calculator.html">Calculator</a></li>
+      <li><a href="simonsays.html">Simon Says Game</a></li>
+      <li><a href="hungrysnake.html">Hungry Snake</a></li>
+   </ul>
+   <div id="content">
+      <p><body style="background-color:#000000">
+<table BORDER=10 bordercolor="#0066FF">
+    <tr>
+        <td>
+            <input type="text" id="Number1" name="Number1" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <select id="operator">
+                <option value="addition">+</option>
+                <option value="subtraction">-</option>
+                <option value="multiplication">*</option>
+                <option value="division">/</option>
+                <option value="squared">^2</option>
+                <option value="square root">Square root</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="text" id="Number2" name="Number2" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+        <p>=</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="text" id="result" name="result" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+    <input type="submit" id="btn_sub" name="btn_sub" value="Enter" onclick="calculate();" />
+        </td>
+    </tr>
+</table>
+</html>
