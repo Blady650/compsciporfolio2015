@@ -58,7 +58,7 @@ h1 {
       <li><a href="html.html">HTML</a></li>
       <li><a href="aboutme.html">About Me</a></li>
       <li><a href="hardware.html">Hardware</a></li>
-      <li><a href="welcome.html">Home</a></li>
+      <li><a href="index.html">Home</a></li>
       <li><a href="calculator.html">Calculator</a></li>
       <li><a href="simonsays.html">Simon Says Game</a></li>
    </ul>
@@ -75,31 +75,37 @@ h1 {
     <code><pre>
     var Bot = require('bot');
 var PF = require('pathfinding');
-var bot = new Bot('q8o61dp4', 'arena', 'http://52.8.116.125:9000'); //Put your bot's code here and change training to Arena when you want to fight others.
-//var bot = new Bot('id6a4m0i', 'arena', 'http://vindinium.org'); //Put your bot's code here and change training to Arena when you want to fight others.
+var bot = new Bot('q8o61dp4', 'arena', 'http://52.8.116.125:9000'); 
+//Put your bot's code here and change training to Arena when you want to fight others.
+//var bot = new Bot('id6a4m0i', 'arena', 'http://vindinium.org'); 
+//Put your bot's code here and change training to Arena when you want to fight others.
 var goDir;
 var Promise = require('bluebird');
 Bot.prototype.botBrain = function() {
     return new Promise(function(resolve, reject) {
         _this = bot;
         //////* Write your bot below Here *//////
-        //////* Set `myDir` in the direction you want to go and then bot.goDir is set to myDir at the bottom *////////
+        //////* Set `myDir` in the direction you want to go and then bot.goDir is set
+        to myDir at the bottom *////////
         
         /*                                      * 
          * This Code is global data!            *
          *                                      */
         
-        // Set myDir to what you want and it will set bot.goDir to that direction at the end.  Unless it is "none"
+        // Set myDir to what you want and it will set bot.goDir to that direction at
+        the end.  Unless it is "none"
         var myDir;
         var myPos = [bot.yourBot.pos.x, bot.yourBot.pos.y];
 
-        // Gives the enemy bots a variable for use in other variables for example using this variable to target an enemy bot or run away from an enemy bot
+        // Gives the enemy bots a variable for use in other variables for example
+        using this variable to target an enemy bot or run away from an enemy bot
         var enemyBots = [];
         if(bot.yourBot.id != 1) enemyBots.push(bot.bot1);
         if(bot.yourBot.id != 2) enemyBots.push(bot.bot2);
         if(bot.yourBot.id != 3) enemyBots.push(bot.bot3);
         if(bot.yourBot.id != 4) enemyBots.push(bot.bot4);
-        // Gives mines that aren't mine whether it be enemy mines or free mines, a variable to use if i want to make a task to get all the mines
+        // Gives mines that aren't mine whether it be enemy mines or free mines, a
+        variable to use if i want to make a task to get all the mines
         var notMyMines = [];
         notMyMines = notMyMines.concat(bot.freeMines);
         if(bot.yourBot.id != 1) notMyMines = notMyMines.concat(bot.bot1mines);
@@ -127,7 +133,8 @@ Bot.prototype.botBrain = function() {
         if(task === "tavern") {
             var closestTavern = bot.taverns[0];
             for(i = 0; i < bot.taverns.length; i++) {
-                if(bot.findDistance(myPos, closestTavern) > bot.findDistance(myPos, bot.taverns[i])) {
+                if(bot.findDistance(myPos, closestTavern) > bot.findDistance(myPos, 
+                bot.taverns[i])) {
                     closestTavern = bot.taverns[i];
                 }
             }
@@ -139,7 +146,8 @@ Bot.prototype.botBrain = function() {
         if(task === "freeMines") {
             var closestMine = notMyMines[0];
             for(i = 0; i < notMyMines.length; i++) {
-                if(bot.findDistance(myPos, closestMine) > bot.findDistance(myPos, notMyMines[i])) {
+                if(bot.findDistance(myPos, closestMine) > bot.findDistance(myPos, 
+                notMyMines[i])) {
                     closestMine = notMyMines[i];
                 }
             }
@@ -156,13 +164,16 @@ Bot.prototype.botBrain = function() {
                     lowestHeathIndex = i;
                 }
             }
-            myDir = bot.findPath(myPos, [enemyBots[lowestHeathIndex].pos.x, enemyBots[lowestHeathIndex].pos.y])
+            myDir = bot.findPath(myPos, [enemyBots[lowestHeathIndex].pos.x, enemyBots
+            [lowestHeathIndex].pos.y])
           }
         // This code finds the nearest free mine //
         
         /*                                                                                                                              * 
-         * This Code Sets your direction based on myDir.  If you are trying to go to a place that you can't reach, you move randomly.   *
-         * Otherwise you move in the direction set by your code.  Feel free to change this code if you want.                            */
+         * This Code Sets your direction based on myDir.  If you are trying to go to a 
+         place that you can't reach, you move randomly.   *
+         * Otherwise you move in the direction set by your code.  Feel free to change 
+         this code if you want.                            */
         console.log("myDir" + myDir);
         if(myDir === "none") {
             console.log("Going Random!");
@@ -185,5 +196,6 @@ Bot.prototype.botBrain = function() {
 }
 bot.runGame();
 </pre></code>
+<h2></h2>
 </body>
 </html>
