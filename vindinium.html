@@ -196,6 +196,30 @@ Bot.prototype.botBrain = function() {
 }
 bot.runGame();
 </pre></code>
-<h2></h2>
+<h3>This might seem like gibberish at first but I'll explain each block of code in simpler terms:</h3>
+<br/>
+<br/>
+    <table border="1" style="width:100%">
+        <th>
+        <code><pre>
+        var Bot = require('bot');
+var PF = require('pathfinding');
+var bot = new Bot('q8o61dp4', 'arena', 'http://52.8.116.125:9000'); 
+//Put your bot's code here and change training to Arena when you want to fight others.
+//var bot = new Bot('id6a4m0i', 'arena', 'http://vindinium.org'); 
+//Put your bot's code here and change training to Arena when you want to fight others.
+var goDir;
+var Promise = require('bluebird');
+Bot.prototype.botBrain = function() {
+    return new Promise(function(resolve, reject) {
+        _this = bot;
+        //////* Write your bot below Here *//////
+        //////* Set `myDir` in the direction you want to go and then bot.goDir is set
+        to myDir at the bottom *////////
+        </pre></code>
+        </th>
+   </table>
+   <br/>
+   <p>In this block of code, we are just naming variables that are going to be used later on. <bold>require('bot)</bold> means it is loading up</p>
 </body>
 </html>
