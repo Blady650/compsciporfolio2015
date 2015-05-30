@@ -205,21 +205,141 @@ bot.runGame();
         var Bot = require('bot');
 var PF = require('pathfinding');
 var bot = new Bot('q8o61dp4', 'arena', 'http://52.8.116.125:9000'); 
-//Put your bot's code here and change training to Arena when you want to fight others.
 //var bot = new Bot('id6a4m0i', 'arena', 'http://vindinium.org'); 
-//Put your bot's code here and change training to Arena when you want to fight others.
 var goDir;
 var Promise = require('bluebird');
 Bot.prototype.botBrain = function() {
     return new Promise(function(resolve, reject) {
         _this = bot;
-        //////* Write your bot below Here *//////
-        //////* Set `myDir` in the direction you want to go and then bot.goDir is set
-        to myDir at the bottom *////////
         </pre></code>
         </th>
    </table>
    <br/>
-   <p>In this block of code, we are just naming variables that are going to be used later on. <bold>require('bot)</bold> means it is loading up</p>
+   <p>In this block of code, we are just naming variables that are going to be used later on. 
+   <b>require('bot')</b> means it is loading up. It does the same for pathfinding. I have to include my own bot or AI so that 
+   this code is specifically meant for my AI. It also locates what server it'll play when I run it.</p>
+   <br/>
+   <br/>
+   <table border="1" style="width:100%">
+       <th>
+       <code><pre>
+        var myDir;
+        var myPos = [bot.yourBot.pos.x, bot.yourBot.pos.y];
+        var enemyBots = [];
+        if(bot.yourBot.id != 1) enemyBots.push(bot.bot1);
+        if(bot.yourBot.id != 2) enemyBots.push(bot.bot2);
+        if(bot.yourBot.id != 3) enemyBots.push(bot.bot3);
+        if(bot.yourBot.id != 4) enemyBots.push(bot.bot4);
+        // Gives mines that aren't mine whether it be enemy mines or free mines, a
+        variable to use if i want to make a task to get all the mines
+        var notMyMines = [];
+        notMyMines = notMyMines.concat(bot.freeMines);
+        if(bot.yourBot.id != 1) notMyMines = notMyMines.concat(bot.bot1mines);
+        if(bot.yourBot.id != 2) notMyMines = notMyMines.concat(bot.bot2mines);
+        if(bot.yourBot.id != 3) notMyMines = notMyMines.concat(bot.bot3mines);
+        if(bot.yourBot.id != 4) notMyMines = notMyMines.concat(bot.bot4mines);
+       </pre></code>
+       </th>
+   </table>
+   <br/>
+   <p> myDir and myPos are variables that'll give the AI the direction it will go and track where it's at on the map. I want my AI 
+   to see where are the enemy bots so we included this block of code for later use so that I can make my AI to avoid enemybots
+   or attack enemy bots. I want my bot to go attack mines so that it can win so I made this block of code for later use. For 
+   example, I can use this to get mines that are free, mines that are owned by other bots, or stop getting mines all together.
+   </p>
+   <br/>
+   <br/>
+      <table border="1" style="width:100%">
+       <th>
+       <code><pre>
+         var task;
+        if(bot.yourBot.life < 35){
+            task = "tavern";
+        }
+        else{ 
+            task = "freeMines";   
+        }
+        console.log("Doing It" + task);
+       </pre></code>
+       </th>
+   </table>
+   <br/>
+   <p> This is where the bot actually does what it's suppose to do. If the bot's health is less than 35%, then it will do the
+   variable "tavern" which makes the bot go to the nearest tavern to gain health. This improves survivability greatly so that
+   the bot won't lose all its mines. If the bot's health is not less than 35%, it will go attack mines either that are free or
+   taken from another bot. It will let the terminal that it's going to a tavern or a mine.
+   </p>
+   <br/>
+   <br/>
+   <table border="1" style="width:100%">
+       <th>
+       <code><pre>
+        if(task === "tavern") {
+            var closestTavern = bot.taverns[0];
+            for(i = 0; i < bot.taverns.length; i++) {
+                if(bot.findDistance(myPos, closestTavern) > bot.findDistance(myPos, 
+                bot.taverns[i])) {
+                    closestTavern = bot.taverns[i];
+                }
+            }
+            console.log("Going to get health!");
+            myDir = bot.findPath(myPos, closestTavern);
+        }
+        
+        // This code finds the nearest enemy mine and sets myDir toward that direction //
+        if(task === "freeMines") {
+            var closestMine = notMyMines[0];
+            for(i = 0; i < notMyMines.length; i++) {
+                if(bot.findDistance(myPos, closestMine) > bot.findDistance(myPos, 
+                notMyMines[i])) {
+                    closestMine = notMyMines[i];
+                }
+            }
+            console.log("Spotted closest mine" + myDir + closestMine);
+            console.log("Going to get gold!");
+            myDir = bot.findPath(myPos, closestMine);
+        }
+        
+        //This code finds the nearest enemyBot that has the lowest health and attacks it        
+        if(task === "attacklowestheath"){
+            var lowestHeathIndex = 0;
+            for (i = 0; i < enemyBots.length; i++){
+                if (enemyBots[lowestHeathIndex].life > enemyBots[i].life){
+                    lowestHeathIndex = i;
+                }
+            }
+            myDir = bot.findPath(myPos, [enemyBots[lowestHeathIndex].pos.x, enemyBots
+            [lowestHeathIndex].pos.y])
+          }
+       </pre></code>
+       </th>
+   </table>
+   <br/>
+   <p> These blocks make the decision for the bot and show it how its going to do it. For all three of the task options, it 
+   locates the nearest one and makes the bot go to that certain location depending on the health of the bot. It pretty much
+   sets the bot's direction to a location instead of it going random locations.
+   </p>
+   <br/>
+   <br/>
+      <table border="1" style="width:100%">
+       <th>
+       <code><pre>
+           console.log("myDir" + myDir);
+        if(myDir === "none") {
+            console.log("Going Random!");
+            var rand = Math.floor(Math.random() * 4);
+            var dirs = ["north", "south", "east", "west"];
+            bot.goDir = dirs[rand];
+        } else {
+            bot.goDir = myDir;
+        }
+          </pre></code>
+       </th>
+   </table>
+   <br/>
+   <p> This sets the direction of the bot if it doesn't have any task to preform. Since there are three tasks that the bot
+   can do, this code will be rarely used. All it does is go random directions when there aren't any tasks to preform for 
+   example going to a tavern or a mine.
+   </p>
 </body>
 </html>
